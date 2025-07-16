@@ -60,7 +60,7 @@ const hue = (h: number) => `hsl(${h}, 100%, 50%)`
  */
 
 const container: React.CSSProperties = {
-    overflow: "hidden",
+
     margin: " auto",
     maxWidth: 500,
     paddingBottom: 0,
@@ -69,7 +69,7 @@ const container: React.CSSProperties = {
 }
 
 const cardContainer: React.CSSProperties = {
-    overflow: "hidden",
+
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

@@ -13,7 +13,12 @@ export default function ProjectCards({ project }: { project: any }) {
     const header = (
         <div style={{ display: "flex", width: "100%", flexDirection: "column", alignItems: "center", padding: "0 0.25rem" }}>
             <h2 style={{ padding: "0", margin: "0.25rem 0" }}>{project.title}</h2>
-            <Divider style={{ padding: "0", margin: "0" }} />
+            <Divider pt={{
+                root: {
+                    style: { width: "50%", margin: "0", color: "rgba(255, 255, 255, .5)", }
+                }
+            }} />
+
             <h4 style={{ padding: "0", fontSize: "0.875rem", margin: "0.5rem 0" }}>{project.description}</h4>
             <ul style={{ padding: "0", fontSize: "0.875rem", marginTop: "0" }}>
                 {project.features.map((feature) => (
@@ -27,11 +32,11 @@ export default function ProjectCards({ project }: { project: any }) {
         <div style={{ display: "flex", justifyContent: "center", gap: "0.75rem", marginBottom: "1.25rem" }}>
             <Button
                 style={{
-                    padding: "0.25rem 0.5rem", // p-button-sm equivalent
-                    fontSize: "0.875rem", // p-button-sm equivalent
-                    backgroundColor: "transparent", // p-button-outlined equivalent
-                    border: "1px solid var(--primary-color)", // p-button-outlined equivalent
-                    color: "var(--primary-color)" // p-button-outlined equivalent
+                    fontSize: "0.4rem",
+                    marginTop: "0.5rem",
+                    backgroundColor: "transparent",
+                    border: "1px solid var(--primary-color)",
+                    color: "var(--primary-color)"
                 }}
                 label="Open Website"
                 icon="pi pi-globe"
@@ -43,11 +48,13 @@ export default function ProjectCards({ project }: { project: any }) {
                 label="Open in GitHub"
                 icon="pi pi-github"
                 style={{
-                    padding: "0.25rem 0.5rem", // p-button-sm equivalent
-                    fontSize: "0.875rem", // p-button-sm equivalent
-                    backgroundColor: "transparent", // p-button-outlined equivalent
-                    border: "1px solid var(--primary-color)", // p-button-outlined equivalent
-                    color: "var(--primary-color)" // p-button-outlined equivalent
+                    fontSize: "0.4rem",
+                    marginTop: "0.5rem",
+
+                    backgroundColor: "rgba(0, 0, 0, 0.5)",
+                    border: "5px solid var(--primary-color)",
+                    borderRadius: "50px",
+                    color: "var(--primary-color)"
                 }}
                 onClick={() => {
                     window.open(`https://github.com/HicksDaniel/${project.id}`, "_blank");
@@ -63,7 +70,8 @@ export default function ProjectCards({ project }: { project: any }) {
 
 
             style={{
-                height: "100%",
+
+                width: "100%",
                 background: "rgba(0, 0, 0, 0.6)",
                 color: "var(--text-color)",
                 borderRadius: "5px",
@@ -71,11 +79,10 @@ export default function ProjectCards({ project }: { project: any }) {
                 outline: "5px solid rgba(0,0,0,0.5)",
                 display: "flex",
                 flexDirection: "column",
-                width: "50%",
-                margin: "0 0.75rem",
+                padding: "0.25rem",
                 alignItems: "space-between",
                 justifyContent: "space-between",
-                padding: "0.25rem",
+
                 boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
             }}
         >
@@ -100,7 +107,6 @@ export default function ProjectCards({ project }: { project: any }) {
                     src={project.image}
                     alt={project.title}
                     style={{
-                        minWidth: "18rem",
                         objectFit: "contain",
                         borderRadius: "0.75rem",
                         width: "100%",
@@ -122,7 +128,7 @@ export default function ProjectCards({ project }: { project: any }) {
                         const step = (2 * Math.PI) / total;
                         const offset = total % 2 === 0 ? step / 1 : -Math.PI / 2;
                         const angle = (2 * Math.PI * i) / total + offset
-                        const radius = isHovered ? 100 : 360;
+                        const radius = isHovered ? 80 : 360;
                         const x = Math.cos(angle) * radius;
                         const y = Math.sin(angle) * radius;
 

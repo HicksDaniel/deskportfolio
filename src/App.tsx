@@ -1,6 +1,7 @@
 // App.tsx
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback, useMemo } from 'react';
 import Draggable from 'react-draggable';
+import throttle from 'lodash/throttle';
 import './App.css';
 
 import {
@@ -15,14 +16,14 @@ import {
 import ItemModal from './components/ItemModal';
 
 // -----------------------------------------------------------------------------
-// DraggableItem: memoized wrapper that handles one DeskItem
+// DraggableItem: memoized wrapper that handles one DeskItem, now with throttled onDrag
 // -----------------------------------------------------------------------------
 const DraggableItem = React.memo(function DraggableItem({
   item,
   initialZ,
   isActive,
-  onActivate,
   deskActive,
+  onActivate,
   onOpen,
 }: {
   item: DeskItem;
@@ -40,7 +41,21 @@ const DraggableItem = React.memo(function DraggableItem({
     }
   }, [onActivate, item.id]);
 
-  // Build inner content: either an <img> or a custom component
+  // Throttle drag events to ~60fps (every 16.67ms)
+  const handleDrag = useMemo(
+    () =>
+      throttle((_: MouseEvent, data: { x: number; y: number }) => {
+        // Put your “heavy” drag logic here.
+        // For example, you could call a callback prop:
+        // onDrag(item.id, data.x, data.y);
+        // Or update some DOM/UI directly:
+        // nodeRef.current!.style.transform = `translate(${data.x}px, ${data.y}px)`;
+
+        console.log(`Dragged ${item.id} to`, data.x, data.y);
+      }, 16.67),
+    [item.id]
+  );
+
   const innerContent = item.component ? (
     (() => {
       const Component = item.component!;
@@ -69,7 +84,6 @@ const DraggableItem = React.memo(function DraggableItem({
     />
   );
 
-  // Special prop for mockPhone bounds
   const draggableProps =
     item.id === 'mockPhone' ? { bounds: 'parent' as const } : {};
 
@@ -78,11 +92,12 @@ const DraggableItem = React.memo(function DraggableItem({
       nodeRef={nodeRef}
       defaultPosition={{ x: 0, y: 0 }}
       onStart={handleStart}
+      onDrag={handleDrag}
       {...draggableProps}
     >
       <div
         ref={nodeRef}
-        onClick={(e) => {
+        onClick={e => {
           e.stopPropagation();
           onActivate(nodeRef.current!, item.id);
         }}
@@ -92,12 +107,11 @@ const DraggableItem = React.memo(function DraggableItem({
           ...item.position,
           width: item.size.width,
           height: item.size.height,
-          zIndex: initialZ,           // initial stacking order
+          zIndex: initialZ,
           cursor: 'grab',
           ...(item.id === 'tablet' && {
             transition: 'box-shadow 0.3s ease-in-out',
             borderRadius: '12px',
-            overflow: 'hidden',
           }),
         }}
       >
@@ -120,10 +134,6 @@ export default function App() {
 
   const allItems = [...stickyItems, ...imageItems, ...deviceItems];
 
-  // Called when an item is clicked or drag starts:
-  //   - Bump the global z-index counter
-  //   - Apply the new z-index directly to the DOM node
-  //   - Mark it as active (React state) for styling
   const handleActivate = useCallback(
     (node: HTMLDivElement, id: ItemID) => {
       highestZ.current += 1;
@@ -148,7 +158,7 @@ export default function App() {
           backgroundImage: 'url(/smooth-wooden-texture.jpg)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          transition: "2s ease-in-out",
+          transition: '2s ease-in-out',
           boxShadow: deskActive ? 'none' : '10px 10px 1px rgba(0, 0, 0, 1)',
           transform: deskActive
             ? `matrix3d(

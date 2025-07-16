@@ -77,7 +77,7 @@ export const deviceItems: DeskItem[] = [
     id: 'tablet',
     type: 'device',
     position: { top: '20%', left: '5%' },
-    size: { width: '40%', height: '65%' },
+    size: { width: '40%', height: 'auto' },
     rotation: 'rotate(0deg)',
     component: MovieShowcase,
     componentProps: { isActive: true }
@@ -86,7 +86,7 @@ export const deviceItems: DeskItem[] = [
     id: 'mockPhone',
     type: 'device',
     position: { top: '10%', right: '0%' },
-    size: { width: '9%', height: '50%' },
+    size: { width: '9%', height: "auto" },
     rotation: 'rotate(0deg)',
     component: MockPhone,
     componentProps: { deskActive: true, isActive: false }

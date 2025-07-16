@@ -40,7 +40,7 @@ export const imageList: TechStackItem[] = [
     },
     {
         name: "PrimeFlex",
-        icon: PrimeFlex
+        src: "/primeflex.svg"
     },
     {
         name: "Material UI",
