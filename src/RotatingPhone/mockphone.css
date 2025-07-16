@@ -1,0 +1,25 @@
+.phone-contents {
+    display: flex;
+    scrollbar-width: none;
+    flex-flow: column nowrap;
+    overflow: auto;
+    border-radius: 30px;
+    justify-content: flex-start;
+    align-items: center;
+    color: rgb(0, 1, 49);
+    height: 100%;
+    width: 100%;
+}
+
+.contents-layout {
+    margin-top: 30px;
+}
+
+.black-bar {
+    position: absolute;
+    margin-top: 20px;
+    width: 25%;
+    height: 4%;
+    border-radius: 50px;
+    background-color: rgb(0, 0, 0);
+}
