@@ -21,7 +21,7 @@ export default function MockPhone({ isActive, deskActive }) {
                 alignItems: "center",
                 width: "100%",
                 transition: "1s ease-in-out",
-                transform: isActive ? 'rotate(0deg)' : 'rotate(45deg)',
+                transform: isActive ? 'rotate(0deg)' : 'rotate(25deg)',
                 margin: "0 auto"
             }}>
 

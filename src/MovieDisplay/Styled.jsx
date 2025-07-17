@@ -101,8 +101,8 @@ transition: box-shadow 3s ease-in-out;
       box-shadow:
        inset 0px 0px 0px 5px rgba(0, 0, 0, 1),      
         0px 1px 1px 1px rgba(255, 255, 255, 1),
-        10px 11px 1px 1px rgba(50, 50, 50, 1), 
-        10px 0px 0px 10px rgba(50, 50, 50, 1),     
+      
+        5px 2px 0px 10px rgba(50, 50, 50, 1),     
         20px -5px 10px 10px rgba(15, 15, 15, 0.8);
     `
   }
