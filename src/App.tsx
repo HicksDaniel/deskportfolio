@@ -1,9 +1,7 @@
-// App.tsx
-import React, { useRef, useState, useCallback, useMemo } from 'react';
-import Draggable from 'react-draggable';
-import throttle from 'lodash/throttle';
-import './App.css';
-
+import React, { useRef, useState, useCallback } from 'react';
+import DraggableItem from './components/DraggableItem';
+import ItemModal from './components/ItemModal';
+import "./App.css";
 import {
   stickyItems,
   imageItems,
@@ -13,124 +11,14 @@ import {
   draggableItems,
 } from './libs/deskItems';
 
-import ItemModal from './components/ItemModal';
-
-// -----------------------------------------------------------------------------
-// DraggableItem: memoized wrapper that handles one DeskItem, now with throttled onDrag
-// -----------------------------------------------------------------------------
-const DraggableItem = React.memo(function DraggableItem({
-  item,
-  initialZ,
-  isActive,
-  deskActive,
-  onActivate,
-  onOpen,
-}: {
-  item: DeskItem;
-  initialZ: number;
-  isActive: boolean;
-  deskActive: boolean;
-  onActivate: (node: HTMLDivElement, id: ItemID) => void;
-  onOpen: (id: ItemID) => void;
-}) {
-  const nodeRef = useRef<HTMLDivElement>(null);
-
-  const handleStart = useCallback(() => {
-    if (nodeRef.current) {
-      onActivate(nodeRef.current, item.id);
-    }
-  }, [onActivate, item.id]);
-
-  // Throttle drag events to ~60fps (every 16.67ms)
-  const handleDrag = useMemo(
-    () =>
-      throttle((_: MouseEvent, data: { x: number; y: number }) => {
-        // Put your “heavy” drag logic here.
-        // For example, you could call a callback prop:
-        // onDrag(item.id, data.x, data.y);
-        // Or update some DOM/UI directly:
-        // nodeRef.current!.style.transform = `translate(${data.x}px, ${data.y}px)`;
-
-        console.log(`Dragged ${item.id} to`, data.x, data.y);
-      }, 16.67),
-    [item.id]
-  );
-
-  const innerContent = item.component ? (
-    (() => {
-      const Component = item.component!;
-      return (
-        <Component
-          {...item.componentProps}
-          deskActive={deskActive}
-          isActive={isActive}
-        />
-      );
-    })()
-  ) : (
-    <img
-      src={item.src}
-      alt={item.id.startsWith('sticky') ? `Sticky ${item.id}` : `Image ${item.id}`}
-      style={{
-        width: '100%',
-        height: 'auto',
-        transition: '.5s ease-in-out',
-        transform: isActive ? 'rotate(0deg)' : item.rotation,
-        boxShadow: isActive
-          ? '2px 0 15px 2px rgba(0,0,0,0.8)'
-          : '1px 1px 5px 0.5px rgba(0,0,0,0.5)',
-        pointerEvents: 'none',
-      }}
-    />
-  );
-
-  const draggableProps =
-    item.id === 'mockPhone' ? { bounds: 'parent' as const } : {};
-
-  return (
-    <Draggable
-      nodeRef={nodeRef}
-      defaultPosition={{ x: 0, y: 0 }}
-      onStart={handleStart}
-      onDrag={handleDrag}
-      {...draggableProps}
-    >
-      <div
-        ref={nodeRef}
-        onClick={e => {
-          e.stopPropagation();
-          onActivate(nodeRef.current!, item.id);
-        }}
-        onDoubleClick={() => onOpen(item.id)}
-        style={{
-          position: 'absolute',
-          ...item.position,
-          width: item.size.width,
-          height: item.size.height,
-          zIndex: initialZ,
-          cursor: 'grab',
-          ...(item.id === 'tablet' && {
-            transition: 'box-shadow 0.3s ease-in-out',
-            borderRadius: '12px',
-          }),
-        }}
-      >
-        {innerContent}
-      </div>
-    </Draggable>
-  );
-});
-
-// -----------------------------------------------------------------------------
-// App: lays out all DraggableItems and manages z-index imperatively
-// -----------------------------------------------------------------------------
 export default function App() {
   const containerRef = useRef<HTMLDivElement>(null);
   const highestZ = useRef(draggableItems.length);
 
+  // ← pass initial values to useState
   const [activeItem, setActiveItem] = useState<ItemID | null>(null);
-  const [popupItem, setPopupItem] = useState<ItemID | null>(null);
-  const [deskActive, setDeskActive] = useState(false);
+  const [popupItem, setPopupItem] = useState<DeskItem | null>(null);
+  const [deskActive, setDeskActive] = useState<boolean>(false);
 
   const allItems = [...stickyItems, ...imageItems, ...deviceItems];
 
@@ -152,18 +40,19 @@ export default function App() {
           position: 'relative',
           display: 'flex',
           justifyContent: 'center',
+          justifySelf: "center",
           width: '95vw',
           height: '95vh',
-          borderRadius: '10px',
+          borderRadius: '25px',
           backgroundImage: 'url(/smooth-wooden-texture.jpg)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          transition: '2s ease-in-out',
-          boxShadow: deskActive ? 'none' : '10px 10px 1px rgba(0, 0, 0, 1)',
+          transition: "2s ease-in-out",
+          boxShadow: deskActive ? 'none' : '10px 10px 1px rgba(41, 26, 26, 1)',
           transform: deskActive
             ? `matrix3d(
                 1, 0, 0, 0,
-                0, 1, 0.1, -0.00005,
+                0, 1, 0.1, -0.000025,
                 0, 0, 0.5, 0,
                 0, 0, 0, 1
               )`
@@ -185,12 +74,22 @@ export default function App() {
             isActive={activeItem === item.id}
             deskActive={deskActive}
             onActivate={handleActivate}
-            onOpen={setPopupItem}
+
+            onOpen={(id) => {
+              console.log("it's fucking running", id);
+              const found = allItems.find((i) => i.id === id) ?? null;
+              console.log("found", found);
+              setPopupItem(found);
+            }}
           />
         ))}
 
-        <ItemModal popupItem={popupItem} onClose={() => setPopupItem(null)} />
+        <ItemModal selectedPopupItem={popupItem} onClose={() => setPopupItem(null)} />
       </div>
     </>
   );
 }
+
+
+
+

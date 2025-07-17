@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
-import { allItems, type ItemID } from '../libs/deskItems';
+import { allItems, type DeskItem } from '../libs/deskItems';
+
 
 /**
  * ItemModal - A reusable modal component for displaying desk items
@@ -13,7 +14,7 @@ import { allItems, type ItemID } from '../libs/deskItems';
  */
 
 interface ItemModalProps {
-  popupItem: ItemID | null;
+  selectedPopupItem: DeskItem | null;
   onClose: () => void;
   /** Custom styles for the modal overlay */
   overlayStyle?: React.CSSProperties;
@@ -24,7 +25,7 @@ interface ItemModalProps {
 }
 
 export default function ItemModal({
-  popupItem,
+  selectedPopupItem,
   onClose,
   overlayStyle = {},
   contentStyle = {},
@@ -38,7 +39,7 @@ export default function ItemModal({
       }
     };
 
-    if (popupItem) {
+    if (selectedPopupItem) {
       document.addEventListener('keydown', handleEscKey);
       // Prevent body scroll when modal is open
       document.body.style.overflow = 'hidden';
@@ -48,18 +49,19 @@ export default function ItemModal({
       document.removeEventListener('keydown', handleEscKey);
       document.body.style.overflow = 'unset';
     };
-  }, [popupItem, onClose]);
+  }, [selectedPopupItem, onClose]);
 
-  if (!popupItem) return null;
+  if (!selectedPopupItem) return null;
 
-  const item = allItems.find(item => item.id === popupItem);
+  const item = allItems.find(item => item.id === selectedPopupItem.id);
   if (!item) return null;
 
   const renderModalContent = () => {
     if (item.type === 'device' && item.component) {
+      const maxWidth = item.id === 'mockPhone' ? '350px' : '1200px';
       const Component = item.component;
       return (
-        <div className="modal-child-wrapper">
+        <div style={{ width: maxWidth }} className="modal-child-wrapper">
           <Component
             {...item.componentProps}
             deskActive={true}
@@ -112,7 +114,7 @@ export default function ItemModal({
           maxWidth: '90vw',
           maxHeight: '90vh',
           overflow: 'auto',
-          backgroundColor: 'white',
+          backgroundColor: 'rgba(100, 100, 100, 0.8)',
           borderRadius: '12px',
           padding: '2rem',
           boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
