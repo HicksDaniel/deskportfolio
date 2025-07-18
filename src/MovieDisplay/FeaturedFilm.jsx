@@ -1,99 +1,39 @@
 /* eslint-disable react/prop-types */
-import { Textfit } from 'react-textfit';
+import React, { useState } from "react";
 import PlayArrowRoundedIcon from "@mui/icons-material/PlayArrowRounded";
+import SearchBar from "../components/SearchBar";
 import RecommendedMovies from "./RecommendedMovies";
-import "./FeaturedFilm.css";
-import InputAdornment from "@mui/material/InputAdornment";
-import TextField from "@mui/material/TextField";
-import { FormControl, OutlinedInput, FormHelperText } from "@mui/material";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import TuneRoundedIcon from "@mui/icons-material/TuneRounded";
+import { FeaturedFilmContainer } from "./Styled";
+
 import FavoriteRoundedIcon from "@mui/icons-material/FavoriteRounded";
 import BookmarkBorderRoundedIcon from "@mui/icons-material/BookmarkBorderRounded";
 import AddRoundedIcon from "@mui/icons-material/AddRounded";
 
 export default function FeaturedFilm({ currentMovie, onClick }) {
   const { title, subtitle, releasedate, genres, image } = currentMovie;
+  const [searchValue, setSearchValue] = useState("");
 
   return (
-    <div className="feature-container">
+    <FeaturedFilmContainer>
       <div className="header-bar">
-        <div className="search-container">
-          <FormControl
-            className="search-bar"
-            variant="standard"
-            sx={{
-              marginBottom: "10px",
-              "& .MuiOutlinedInput-root": {
-                color: "#cacaca",
-                fontFamily: "Arial",
-                fontWeight: "bold",
-                "& .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#707070",
-                  borderWidth: "0px",
-                },
-              },
-            }}
-          >
-            <OutlinedInput
-              variant="standard"
-              sx={{
-                width: "100%",
-              }}
-              id="outlined-adornment-weight"
-              endAdornment={
-                <InputAdornment
-                  sx={{
-                    display: "flex",
-                    alignSelf: "center",
-                    justifySelf: "flex-end",
-                    justifyContent: "flex-end",
-                    transform: "translateX(10px)",
-                  }}
-                  position="end"
-                >
-                  <div className="search-bar-icon">
-                    <TuneRoundedIcon
-                      style={{
-                        color: "rgba( 200, 200 , 200, .8",
-                      }}
-                    />
-                  </div>
-                </InputAdornment>
-              }
-              startAdornment={
-                <InputAdornment
-                  sx={{
-                    display: "flex",
-                    alignSelf: "center",
-                    justifyContent: "flex-end",
-                  }}
-                  position="start"
-                >
-                  <SearchRoundedIcon
-                    style={{ color: "rgba( 200, 200 , 200, .8" }}
-                  />
-                </InputAdornment>
-              }
-              aria-describedby="outlined-weight-helper-text"
-              inputProps={{
-                "aria-label": "weight",
-              }}
-            />
-          </FormControl>
-        </div>
+
+        <SearchBar
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          placeholder="Search movies…"
+        />
 
         <div className="feature-info">
           <div>{releasedate}</div>
           <div>{genres}</div>
         </div>
       </div>
+
       <div className="movie-showcase">
-        <div
-          className="movie-title">
-          <Textfit mode="multi" max={100} min={40} >
-            {title.toUpperCase()}
-          </Textfit>
+        <div className="movie-title">
+
+          {title.toUpperCase()}
+
         </div>
         <div className="movie-subtitle">{subtitle}</div>
         <div className="movie-buttons">
@@ -111,9 +51,12 @@ export default function FeaturedFilm({ currentMovie, onClick }) {
               color: "rgb(200,200,200)",
               border: "1px solid rgba(200,200,200, .5)",
             }}
-          >Trailer</button>
+          >
+            Trailer
+          </button>
         </div>
       </div>
+
       <div className="footer-container">
         <div className="movie-choices-container">
           <RecommendedMovies onClick={onClick} />
@@ -132,6 +75,6 @@ export default function FeaturedFilm({ currentMovie, onClick }) {
           </div>
         </div>
       </div>
-    </div >
+    </FeaturedFilmContainer>
   );
 }

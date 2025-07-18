@@ -1,20 +1,20 @@
-import { useState, useEffect } from "react";
-import { MovieList } from "./MovieDataBase";
+import { useState, useRef } from "react";
+import { MovieList } from "../libs/constants";
 import FeaturedFilm from "./FeaturedFilm";
 import MovieSideNav from "./MovieSideNav";
-import "./MovieShowcase.css";
-import { useRef, Fragment } from "react";
+
+
 import { TabletDisplay } from "./Styled";
 import { useMaintainAspectRatio } from "../libs/hooks";
 
-export default function MovieShowcase({ deskActive }) {
+export default function MovieShowcase({ deskActive, transformStyle }) {
   const containerRef = useRef(null);
   const [currentMovie, setCurrentMovie] = useState(MovieList[0]);
   const { width, height } = useMaintainAspectRatio(containerRef, .625);
 
 
   const handleClick = (movie) => {
-    setCurrentMovie(...movie);
+    setCurrentMovie(movie);
 
   };
 
@@ -23,10 +23,12 @@ export default function MovieShowcase({ deskActive }) {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      width: "95%",
+      width: "100%",
       height: "100%",
       maxWidth: "1920px",
-      margin: "0 auto"
+      ...transformStyle,
+      margin: "0 auto",
+
     }} ref={containerRef}>
       <TabletDisplay
         $isActive={deskActive}

@@ -6,6 +6,7 @@ export default function TechStackGrid() {
     return (
         <>
             <h2 style={{
+                marginTop: "2rem",
                 display: "flex",
                 textAlign: "center",
                 justifyContent: "center",
@@ -15,7 +16,11 @@ export default function TechStackGrid() {
             }}>
                 Tech Stack
             </h2>
-            <Divider />
+            <Divider pt={{
+                root: {
+                    style: { justifySelf: "center", width: "90%", color: "rgba(255, 255, 255, 0.8)", marginTop: "1rem" }
+                }
+            }} />
             <div style={{
                 display: "flex",
                 flexFlow: "row wrap",

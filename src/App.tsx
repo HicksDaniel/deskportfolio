@@ -1,6 +1,6 @@
-import React, { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import DraggableItem from './components/DraggableItem';
-import ItemModal from './components/ItemModal';
+
 import "./App.css";
 import {
   stickyItems,
@@ -17,7 +17,7 @@ export default function App() {
 
   // ← pass initial values to useState
   const [activeItem, setActiveItem] = useState<ItemID | null>(null);
-  const [popupItem, setPopupItem] = useState<DeskItem | null>(null);
+  const [isOpen, setIsOpen] = useState<string>("");
   const [deskActive, setDeskActive] = useState<boolean>(false);
 
   const allItems = [...stickyItems, ...imageItems, ...deviceItems];
@@ -42,7 +42,7 @@ export default function App() {
           justifyContent: 'center',
           justifySelf: "center",
           width: '95vw',
-          height: '95vh',
+          height: "95vh",
           borderRadius: '25px',
           backgroundImage: 'url(/smooth-wooden-texture.jpg)',
           backgroundSize: 'cover',
@@ -52,7 +52,7 @@ export default function App() {
           transform: deskActive
             ? `matrix3d(
                 1, 0, 0, 0,
-                0, 1, 0.1, -0.000025,
+                0, 1, 0.1, 0,
                 0, 0, 0.5, 0,
                 0, 0, 0, 1
               )`
@@ -74,18 +74,12 @@ export default function App() {
             isActive={activeItem === item.id}
             deskActive={deskActive}
             onActivate={handleActivate}
-
-            onOpen={(id) => {
-              console.log("it's fucking running", id);
-              const found = allItems.find((i) => i.id === id) ?? null;
-              console.log("found", found);
-              setPopupItem(found);
-            }}
+            isOpen={isOpen}
+            onOpen={(id) => { id === isOpen ? setIsOpen(null) : setIsOpen(id) }}
           />
-        ))}
 
-        <ItemModal selectedPopupItem={popupItem} onClose={() => setPopupItem(null)} />
-      </div>
+        ))}
+      </div >
     </>
   );
 }
